@@ -1,0 +1,7 @@
+# Ignore project setup files
+*.iws
+.idea/workspace.xml
+.idea/tasks.xml
+
+#Ignore classes folders
+*/classes
