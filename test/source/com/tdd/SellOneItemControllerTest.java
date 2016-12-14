@@ -25,11 +25,28 @@ public class SellOneItemControllerTest {
 
             oneOf(display).displayPrice(with(irrelevantPrice));
         }});
-        
+
         SaleController saleController = new SaleController(catalog, display);
         saleController.onBarcode("12345");
 
         //
+
+    }
+
+    @Test
+    public void productNotFound() throws Exception {
+        final Catalog catalog = context.mock(Catalog.class);
+        final Display display = context.mock(Display.class);
+
+        context.checking(new Expectations() {{
+            allowing(catalog).findPrice(with("::product not found::"));
+            will(returnValue(null));
+
+            oneOf(display).displayProductNotFoundMessage(with("::product not found::"));
+        }});
+
+        SaleController saleController = new SaleController(catalog, display);
+        saleController.onBarcode("::product not found::");
 
     }
 
@@ -39,6 +56,8 @@ public class SellOneItemControllerTest {
 
     public interface Display {
         void displayPrice(Price price);
+
+        void displayProductNotFoundMessage(String barcodeNotFound);
     }
 
     public static class SaleController {
@@ -51,7 +70,11 @@ public class SellOneItemControllerTest {
         }
 
         public void onBarcode(String barcode) {
-            display.displayPrice(catalog.findPrice(barcode));
+            Price price = catalog.findPrice(barcode);
+            if (price == null)
+                display.displayProductNotFoundMessage(barcode);
+            else
+                display.displayPrice(price);
         }
     }
 
