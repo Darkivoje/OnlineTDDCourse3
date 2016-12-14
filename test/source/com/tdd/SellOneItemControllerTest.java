@@ -20,14 +20,14 @@ public class SellOneItemControllerTest {
 
         context.checking(new Expectations() {{
             //STUBBING IF I CALL CONTROLLER WITH SOMETHING, HE GIVES ME SOMETHING BACK
-            allowing(catalog).findPrice(with("12345"));
+            allowing(catalog).findPrice(with("::product found::"));
             will(returnValue(irrelevantPrice));
 
             oneOf(display).displayPrice(with(irrelevantPrice));
         }});
 
         SaleController saleController = new SaleController(catalog, display);
-        saleController.onBarcode("12345");
+        saleController.onBarcode("::product found::");
 
         //
 
