@@ -1,6 +1,7 @@
 package com.tdd;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -9,8 +10,12 @@ import java.util.Map;
 public class FindPriceInMemoryCatalogTest extends FindPriceInMemoryCatalogContract {
 
     @Override
-    protected Catalog catalogWith(String barcode, Price price) {
-        return new InMemoryCatalog(Collections.singletonMap(barcode, price));
+    protected Catalog catalogWith(final String barcode, Price price) {
+        return new InMemoryCatalog(new HashMap<String, Price>() {{
+            put("definitly not " + barcode, Price.cents(0));
+            put(barcode, price);
+            put("once again definitly not " + barcode, Price.cents(1000000));
+        }});
     }
 
     @Override
